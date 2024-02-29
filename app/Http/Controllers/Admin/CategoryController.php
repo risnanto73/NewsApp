@@ -16,7 +16,12 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('home.category.index');
+        // mengambil data category berdasarkan data terbaru
+        $title = 'Category Index';
+        $category = Category::latest()->paginate(2);
+
+
+        return view('home.category.index', compact('title', 'category'));
     }
 
     /**
@@ -38,7 +43,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         //melakukan validasi data
-        $this->validate($request, [
+        $this->validate($request,[
             'name' => 'required|max:100',
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ]);
@@ -54,15 +59,17 @@ class CategoryController extends Controller
         $image->storeAs('public/category', $image->hashName());
 
         //melakukan save to database
-
-
-        if (Category::create([
+        $category = Category::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'image' => $image->hashName()
-        ])) return redirect()->route('category.index')->with('success', 'Category Berhasil Ditambahkan');
-        else return redirect()->route('category.index')->with('error', 'Category Gagal Ditambahkan');
+        ]);
 
+        dd($category);
+
+        //melakukan return redirect
+        return redirect()->route('category.index')
+            ->with('success', 'Category Berhasil Ditambahkan');
     }
 
     /**
