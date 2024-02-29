@@ -58,18 +58,21 @@ class CategoryController extends Controller
         // itu menggunakan nama asli dari image
         $image->storeAs('public/category', $image->hashName());
 
-        //melakukan save to database
-        $category = Category::create([
+        //melakukan insert data ke table category dengan kondisi if else
+        if(Category::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'image' => $image->hashName()
-        ]);
+        ])){
+            //jika berhasil direct ke category.index
+            return redirect()->route('category.index')->with(['success' => 'Data Berhasil Disimpan!']);
+        }else{
+            //jika gagal direct ke category.index
+            return redirect()->route('category.index')->with(['error' => 'Data Gagal Disimpan!']);
+        }
+        
 
-        dd($category);
 
-        //melakukan return redirect
-        return redirect()->route('category.index')
-            ->with('success', 'Category Berhasil Ditambahkan');
     }
 
     /**
