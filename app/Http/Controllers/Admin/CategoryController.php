@@ -167,6 +167,12 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //mengambil data category berdasarkan id
+        $category = Category::find($id);
+
+        //hapus image
+        Storage::disk('local')->delete('public/category/' .basename($category->image));
+        //hapus data berdasarkan id
+        $category->delete();
     }
 }
