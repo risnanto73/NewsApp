@@ -18,7 +18,7 @@ class Admin
     public function handle(Request $request, Closure $next)
     {
         // check if user is admin or not
-        if(Auth::user() && Auth::user()->roles == 'admin'){
+        if(Auth::user() && Auth::user()->role == 'admin'){
             return $next($request);
         }
 
