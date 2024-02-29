@@ -6,6 +6,7 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -97,7 +98,12 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        //title untuk halaman edit
+        $title = 'Category Edit';
+
+        //mengambil data category berdasarkan id
+        $category = Category::find($id);
+        return view('home.category.edit', compact('title', 'category'));
     }
 
     /**
@@ -109,7 +115,48 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //melakukan validasi data
+        $this->validate($request,[
+            'name' => 'required|max:100',
+            'image' => 'image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
+        //mengambil data category berdasarkan id
+        $category = Category::find($id);
+
+        //kondisi jika image kosong
+        if($request->file('image') == "") {
+
+            //update data tanpa image
+            $category->update([
+                'name' => $request->name,
+                'slug' => Str::slug($request->name)
+            ]);
+
+        } else {
+
+            //hapus old image dengan basename
+            // function basename itu untuk mengambil data sesuai dengan nama file
+            Storage::disk('local')->delete('public/category/' .basename($category->image));
+
+            //upload new image
+            $image = $request->file('image');
+
+            // function storeAs itu untuk upload image
+            // dengan nama yang baru dan unique dari hashName
+            $image->storeAs('public/category', $image->hashName());
+
+            //update dengan image baru
+            $category->update([
+                'name' => $request->name,
+                'slug' => Str::slug($request->name),
+                'image' => $image->hashName()
+            ]);
+
+        }
+
+        //jika berhasil direct ke category.index
+        return redirect()->route('category.index')->with(['success' => 'Data Berhasil Diupdate!']);
     }
 
     /**
