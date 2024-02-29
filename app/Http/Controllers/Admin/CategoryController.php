@@ -31,7 +31,10 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('home.category.create');
+        // title untuk halaman create
+        $title = 'Category Create';
+
+        return view('home.category.create', compact('title'));
     }
 
     /**
@@ -70,7 +73,7 @@ class CategoryController extends Controller
             //jika gagal direct ke category.index
             return redirect()->route('category.index')->with(['error' => 'Data Gagal Disimpan!']);
         }
-        
+
 
 
     }

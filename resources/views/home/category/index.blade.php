@@ -57,16 +57,20 @@
                                             {{-- menampilkan tombol aksi --}}
                                             {{-- tombol aksi berupa view, edit, dan delete --}}
 
-                                            {{-- tombol view menggunakan route.show dengan parameter id --}}
-                                            <a href="{{ route('category.show', $row->id) }}" class="btn btn-info">
+                                            {{-- tombol modal view menggunakan route.show dengan parameter id --}}
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                data-bs-target="#basicModal{{ $row->id }}">
                                                 <i class="bi bi-eye"></i>
-                                            </a>
+                                            </button>
+                                            @include('home.category.include.modal-show')
                                             {{-- tombol edit menggunakan route.edit dengan parameter id --}}
                                             <a href="{{ route('category.edit', $row->id) }}" class="btn btn-warning">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
                                             {{-- tombol delete menggunakan route.destroy dengan parameter id --}}
-                                            <form action="{{ route('category.destroy', $row->id) }}" method="post" class="d-inline" onsubmit="return confirm('Are you sure to delete this category?')">
+                                            <form action="{{ route('category.destroy', $row->id) }}" method="post"
+                                                class="d-inline"
+                                                onsubmit="return confirm('Are you sure to delete this category?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button class="btn btn-danger">
@@ -81,7 +85,7 @@
 
                         {{-- menampilkan pagination boostrap --}}
                         {{ $category->links('pagination::bootstrap-5') }}
-                        
+
 
                     </div>
                 </div>
