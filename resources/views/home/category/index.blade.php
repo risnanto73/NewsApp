@@ -56,26 +56,27 @@
                                         <td>
                                             {{-- show using modal with id {{ row->id }} --}}
                                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                data-bs-target="#basicModal{{ $row->id }}">
+                                                data-bs-target="#basicModal{{ $row->id }}" data-bs-placement="bottom" title="Show Category">
                                                 <i class="bi bi-eye"></i>
                                             </button>
                                             @include('home.category.include.modal-show')
 
                                             {{-- button edit with 
                                                 route category.edit {{ row->id }} --}}
-                                            <a href="{{ route('category.edit', $row->id) }}" class="btn btn-warning">
+                                            <a href="{{ route('category.edit', $row->id) }}" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Category">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
 
                                             {{-- button delete with 
                                                 route category.destroy {{ row->id }} --}}
-                                                <form action="{{ route('category.destroy', $row->id) }}" method="post">
+                                                <form action="{{ route('category.destroy', $row->id) }}" method="post" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger">
+                                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this category?')">
                                                         <i class="bi bi-trash"></i>
                                                     </button>
                                                 </form>
+                                            
                                         </td>
                                     </tr>
                                 @empty
@@ -84,6 +85,8 @@
 
                             </tbody>
                         </table>
+                        {{-- paginate --}}
+                        {{ $category->links('pagination::bootstrap-5') }}
                     </div>
                 </div>
             </div>
