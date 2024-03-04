@@ -21,25 +21,23 @@ Route::get('/', function () {
 
 Auth::routes();
 
-
-// Route::get('/register', function () {
-//     return redirect('/login');
+//handle redirect register to login
+// Route::match(['get','post'], '/register', 
+//     function(){
+//         return redirect('/login');
 // });
-
-// Route::match(['get', 'post'], '/register', function () {
-//     return redirect('/login');
-// });
-
 
 //Route Middleware
+Route::middleware('auth')->group(function () {
 
-Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-    Route::middleware(['admin'])->group(function () {
-        //Route for News using Resource
-        Route::resource('news', NewsController::class);
-        //Route for Category using Resource
-        Route::resource('category', CategoryController::class);
+    //Route for admin
+    Route::middleware(['auth', 'admin'])
+        ->group(function () {
+            //Route for News using Resource
+            Route::resource('news', NewsController::class);
+            //Route for Category using Resource
+            Route::resource('category', CategoryController::class);
     });
 });

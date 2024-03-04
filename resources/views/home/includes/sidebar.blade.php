@@ -9,16 +9,12 @@
             </a>
         </li><!-- End Dashboard Nav -->
 
-        {{-- if user is admin --}}
-        @if (Auth::user()->role == 'admin')
-            <li class="nav-item">
-                <a class="nav-link mt-2" href="{{ route('category.index') }}">
-                    <i class="bi bi-basket2"></i>
-                    <span>Category</span>
-                </a>
-            </li>
-        @else
-        @endif
+        <li class="nav-item">
+            <a class="nav-link mt-2" href="{{ route('category.index') }}">
+                <i class="bi bi-basket2"></i>
+                <span>Category</span>
+            </a>
+        </li>
     </ul>
 
 </aside>

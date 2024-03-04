@@ -26,6 +26,8 @@ class HomeController extends Controller
         // title untuk halaman home
         $title = 'Home';
 
-        return view('home', compact('title'));
+        return view('home', compact(
+            'title'
+        ));
     }
 }

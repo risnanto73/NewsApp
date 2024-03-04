@@ -17,12 +17,14 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        // mengambil data category berdasarkan data terbaru
-        $title = 'Category Index';
-        $category = Category::latest()->paginate(2);
-
-
-        return view('home.category.index', compact('title', 'category'));
+        //title halaman index
+        $title = 'Category - Index';
+        //mengurutkan data berdasarkan data terbaru
+        $category = Category::latest()->get();
+        return view('home.category.index', compact(
+            'category',
+            'title'
+        ));
     }
 
     /**
@@ -32,10 +34,12 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        // title untuk halaman create
-        $title = 'Category Create';
+        //title halaman create
+        $title = 'Category - Create';
 
-        return view('home.category.create', compact('title'));
+        return view('home.category.create', compact(
+            'title'
+        ));
     }
 
     /**
@@ -47,7 +51,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         //melakukan validasi data
-        $this->validate($request,[
+        $this->validate($request, [
             'name' => 'required|max:100',
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ]);
@@ -63,20 +67,14 @@ class CategoryController extends Controller
         $image->storeAs('public/category', $image->hashName());
 
         //melakukan insert data ke table category dengan kondisi if else
-        if(Category::create([
+        Category::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'image' => $image->hashName()
-        ])){
-            //jika berhasil direct ke category.index
-            return redirect()->route('category.index')->with(['success' => 'Data Berhasil Disimpan!']);
-        }else{
-            //jika gagal direct ke category.index
-            return redirect()->route('category.index')->with(['error' => 'Data Gagal Disimpan!']);
-        }
+        ]);
 
-
-
+        //redirect jika sukses menyimpan data
+        return redirect()->route('category.index')->with('success', 'Category Created Successfully');
     }
 
     /**
@@ -98,12 +96,18 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        //title untuk halaman edit
-        $title = 'Category Edit';
+        //title halaman edit
+        $title = 'Category - Edit';
 
-        //mengambil data category berdasarkan id
+        //get data category by id
+        //fungsi get data by id adalah mengambil data
+        //berdasarkan id yang diinputkan
         $category = Category::find($id);
-        return view('home.category.edit', compact('title', 'category'));
+
+        return view('home.category.edit', compact(
+            'category',
+            'title'
+        ));
     }
 
     /**
@@ -116,47 +120,41 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         //melakukan validasi data
-        $this->validate($request,[
+        $this->validate($request, [
             'name' => 'required|max:100',
             'image' => 'image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
-        //mengambil data category berdasarkan id
+        //get data category by id
         $category = Category::find($id);
 
-        //kondisi jika image kosong
-        if($request->file('image') == "") {
-
-            //update data tanpa image
+        //jika image kosong (tidak diupdate)
+        if ($request->file('image') == '') {
             $category->update([
                 'name' => $request->name,
                 'slug' => Str::slug($request->name)
             ]);
-
+            return redirect()->route('category.index');
         } else {
+            //jika gambarnya diupdate
+            // hapus image lama
+            Storage::disk('local')
+                ->delete('public/category/'
+                    . basename($category->image));
 
-            //hapus old image dengan basename
-            // function basename itu untuk mengambil data sesuai dengan nama file
-            Storage::disk('local')->delete('public/category/' .basename($category->image));
-
-            //upload new image
+            //upload image baru
             $image = $request->file('image');
+            $image->storeAs('public/category/', $image->hashName());
 
-            // function storeAs itu untuk upload image
-            // dengan nama yang baru dan unique dari hashName
-            $image->storeAs('public/category', $image->hashName());
-
-            //update dengan image baru
+            //update data
             $category->update([
                 'name' => $request->name,
                 'slug' => Str::slug($request->name),
                 'image' => $image->hashName()
             ]);
 
+            return redirect()->route('category.index');
         }
-
-        //jika berhasil direct ke category.index
-        return redirect()->route('category.index')->with(['success' => 'Data Berhasil Diupdate!']);
     }
 
     /**
@@ -167,12 +165,18 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //mengambil data category berdasarkan id
+        //get data by id
         $category = Category::find($id);
 
-        //hapus image
-        Storage::disk('local')->delete('public/category/' .basename($category->image));
-        //hapus data berdasarkan id
+        //delete image
+        //basename itu untuk mengambil nama file
+        Storage::disk('local')
+            ->delete('public/category/' . basename($category->image));
+
+        //delete data by id
         $category->delete();
+
+        return redirect()
+            ->route('category.index');
     }
 }

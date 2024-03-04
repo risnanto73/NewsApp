@@ -34,59 +34,56 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- menampilkan data dari mode menggunakan foreach atau perulangan --}}
-                                @foreach ($category as $row)
-                                    <tr>
-                                        <td>
-                                            {{-- menampilkan nomor urut --}}
-                                            {{ $loop->iteration }}
-                                        </td>
-                                        <td>
-                                            {{-- menampilkan data name --}}
-                                            {{ $row->name }}
-                                        </td>
-                                        <td>
-                                            {{-- menampilkan data slug --}}
-                                            {{ $row->slug }}
-                                        </td>
-                                        <td>
-                                            {{-- menampilkan data image --}}
-                                            <img src="{{ url($row->image) }}" alt="Image" width="100px">
-                                        </td>
-                                        <td>
-                                            {{-- menampilkan tombol aksi --}}
-                                            {{-- tombol aksi berupa view, edit, dan delete --}}
+                                {{-- menampilkan data dengan
+                                     perulangan forelse dari category model --}}
 
-                                            {{-- tombol modal view menggunakan route.show dengan parameter id --}}
+                                @forelse ($category as $row)
+                                    <tr>
+                                        {{-- numbering menggunakan loop->iteration --}}
+                                        <td>{{ $loop->iteration }}</td>
+                                        {{-- menampilkan data name --}}
+                                        <td>{{ $row->name }}</td>
+                                        {{-- menampilkan data slug --}}
+                                        <td>{{ $row->slug }}</td>
+                                        {{-- menampilkan data image --}}
+                                        {{-- fungsi accessor image pada model category 
+                                        adalah untuk menampilkan image 
+                                        tanpa harus menulis path secara manual
+                                        --}}
+                                        <td>
+                                            <img src="{{ $row->image }}" alt="image" width="100px">
+                                        </td>
+                                        <td>
+                                            {{-- show using modal with id {{ row->id }} --}}
                                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                                 data-bs-target="#basicModal{{ $row->id }}">
                                                 <i class="bi bi-eye"></i>
                                             </button>
                                             @include('home.category.include.modal-show')
-                                            {{-- tombol edit menggunakan route.edit dengan parameter id --}}
+
+                                            {{-- button edit with 
+                                                route category.edit {{ row->id }} --}}
                                             <a href="{{ route('category.edit', $row->id) }}" class="btn btn-warning">
-                                                <i class="bi bi-pencil"></i>
+                                                <i class="bi bi-pencil-square"></i>
                                             </a>
-                                            {{-- tombol delete menggunakan route.destroy dengan parameter id --}}
-                                            <form action="{{ route('category.destroy', $row->id) }}" method="post"
-                                                class="d-inline"
-                                                onsubmit="return confirm('Are you sure to delete this category?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button class="btn btn-danger">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </form>
+
+                                            {{-- button delete with 
+                                                route category.destroy {{ row->id }} --}}
+                                                <form action="{{ route('category.destroy', $row->id) }}" method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <p>data masih kosong</p>
+                                @endforelse
+
                             </tbody>
                         </table>
-
-                        {{-- menampilkan pagination boostrap --}}
-                        {{ $category->links('pagination::bootstrap-5') }}
-
-
                     </div>
                 </div>
             </div>
