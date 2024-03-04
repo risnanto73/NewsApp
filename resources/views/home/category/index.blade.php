@@ -59,6 +59,7 @@
                                                 data-bs-target="#basicModal{{ $row->id }}" data-bs-placement="bottom" title="Show Category">
                                                 <i class="bi bi-eye"></i>
                                             </button>
+                                            {{-- // modal dari modal-show.blade.php --}}
                                             @include('home.category.include.modal-show')
 
                                             {{-- button edit with 
@@ -85,7 +86,8 @@
 
                             </tbody>
                         </table>
-                        {{-- paginate --}}
+                        {{-- //pagination diambil dari category model --}}
+                        {{-- // paginate berfungsi untuk membatasi jumlah data yang ditampilkan --}}
                         {{ $category->links('pagination::bootstrap-5') }}
                     </div>
                 </div>

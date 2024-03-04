@@ -25,7 +25,9 @@ class News extends Model
         return $this->belongsTo(Category::class);
     }
 
-    //Accessor Image News
+    // Accessor Image News
+    // Berfungsi untuk memperoleh url image
+    // Dari direktori storage/news
     public function image() : Attribute{
         return Attribute::make(
             get: fn($value) => asset('/storage/news/' . $value)

@@ -23,7 +23,9 @@ class Category extends Model
         return $this->hasMany(News::class);
     }
 
-    //Accessor Image Category
+    // Accessor Image Category
+    // Berfungsi untuk memperoleh url image
+    // Dari direktori storage/category
     public function image() : Attribute{
         return Attribute::make(
             get: fn($value) => asset('/storage/category/' .  $value)

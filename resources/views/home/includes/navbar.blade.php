@@ -213,6 +213,7 @@
                     </li>
 
                     <li>
+                        {{-- //route untuk melakukan logout --}}
                         <form action="{{ route('logout') }}" method="post">
                             @csrf
                             <button type="submit" class="dropdown-item d-flex align-items-center" href="#">

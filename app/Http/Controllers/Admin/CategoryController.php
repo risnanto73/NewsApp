@@ -18,9 +18,15 @@ class CategoryController extends Controller
     public function index()
     {
         //title halaman index
+        // title itu untuk memberikan judul halaman
         $title = 'Category - Index';
         //mengurutkan data berdasarkan data terbaru dengan paginate
+        // paginate itu untuk membatasi data yang ditampilkan
+        // jika data yang ditampilkan lebih dari 5 maka akan muncul halaman
+        // jika kurang dari 5 maka tidak muncul halaman
         $category = Category::latest()->paginate(5);
+
+        // compact itu untuk mengirim data ke view
         return view('home.category.index', compact(
             'category',
             'title'
@@ -35,8 +41,10 @@ class CategoryController extends Controller
     public function create()
     {
         //title halaman create
+        // title itu untuk memberikan judul halaman
         $title = 'Category - Create';
 
+        // compact itu untuk mengirim data ke view
         return view('home.category.create', compact(
             'title'
         ));
@@ -61,8 +69,8 @@ class CategoryController extends Controller
         // menyimpan image yang 
         // diupload ke folder 
         // storage/app/public/category
-        // fungsi hashName untuk generate nama yang unik
-        // fungsi getClientOriginalName 
+        // fungsi hashName() untuk generate nama yang unik
+        // sedangkan fungsi getClientOriginalName() 
         // itu menggunakan nama asli dari image
         $image->storeAs('public/category', $image->hashName());
 
@@ -153,7 +161,7 @@ class CategoryController extends Controller
                 'image' => $image->hashName()
             ]);
 
-            return redirect()->route('category.index');
+            return redirect()->route('category.index')->with('success', 'Category Updated Successfully');
         }
     }
 
@@ -177,6 +185,6 @@ class CategoryController extends Controller
         $category->delete();
 
         return redirect()
-            ->route('category.index');
+            ->route('category.index')->with('success', 'Category Deleted Successfully');
     }
 }

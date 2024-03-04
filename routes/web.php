@@ -33,6 +33,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
     //Route for admin
+    // middleware admin diamana kita membuat middleware sendiri
+    // middleware ini akan memeriksa apakah user yang login adalah admin
+    // jika ya, maka user akan diarahkan ke halaman admin
+    // jika tidak, maka user akan diarahkan ke halaman home
+    // diambil dari app/Http/Middleware/isAdmin.php 
+    // yang didaftrakan di app/Http/Kernel.php
     Route::middleware(['auth', 'admin'])
         ->group(function () {
             //Route for News using Resource

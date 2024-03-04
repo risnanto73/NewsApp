@@ -18,6 +18,7 @@ class isAdmin
     public function handle(Request $request, Closure $next)
     {
         //check if user is admin 
+        //if yes, allow access
         if(Auth::check() 
             && Auth::user()->role == 'admin'){
             return $next($request);
