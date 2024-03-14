@@ -6,7 +6,9 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryRequest;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
@@ -59,22 +61,35 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         //melakukan validasi data
-        $this->validate($request, [
-            'name' => 'required|max:100',
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048'
-        ]);
+        $messages = [
+            'name.required' => 'Nama kategori wajib diisi',
+            'name.max' => 'Nama kategori maksimal 255 karakter',
+            'image.image' => 'File yang diupload harus gambar',
+            'image.mimes' => 'File yang diupload harus berformat jpeg, png, jpg',
+            'image.max' => 'Ukuran gambar maksimal 5MB',
+            'image.required' => 'Gambar wajib diisi'
+        ];
 
-        // melakukan upload image
+        //membuat validasi
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'image' => 'image|mimes:jpeg,png,jpg|max:5120|required'
+        ], $messages);
+
+        //jika validasi gagal
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        //upload image
         $image = $request->file('image');
-        // menyimpan image yang 
-        // diupload ke folder 
-        // storage/app/public/category
-        // fungsi hashName() untuk generate nama yang unik
-        // sedangkan fungsi getClientOriginalName() 
-        // itu menggunakan nama asli dari image
-        $image->storeAs('public/category', $image->hashName());
 
-        //melakukan insert data ke table category dengan kondisi if else
+        //mengambil nama file
+        $image->storeAs('public/category/', $image->hashName());
+
+        //create data
         Category::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),

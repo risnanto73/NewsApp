@@ -31,6 +31,12 @@ Auth::routes();
 Route::middleware('auth')->group(function () {
 
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/profile', [\App\Http\Controllers\Profile\ProfileController::class,'index'])->name('profile.index');
+    Route::get('/change-password',[\App\Http\Controllers\Profile\ProfileController::class, 'changePassword'])->name('profile.change-password');
+    Route::put('/update-password',[\App\Http\Controllers\Profile\ProfileController::class, 'updatePassword'])->name('profile.update-password');
+    Route::get('/create-profile',[\App\Http\Controllers\Profile\ProfileController::class, 'createProfile'])->name('profile.create');
+    //post profile
+    Route::post('/store-profile',[\App\Http\Controllers\Profile\ProfileController::class, 'storeProfile'])->name('profile.store');
 
     //Route for admin
     // middleware admin diamana kita membuat middleware sendiri
@@ -44,6 +50,16 @@ Route::middleware('auth')->group(function () {
             //Route for News using Resource
             Route::resource('news', NewsController::class);
             //Route for Category using Resource
-            Route::resource('category', CategoryController::class);
+
+            // fungsi except('show') itu untuk menghilangkan fungsi show
+            // karena kita tidak akan menggunakan show
+            // fungsi only('index') itu untuk menampilkan fungsi index saja
+            // karena kita hanya akan menggunakan index
+            Route::resource('category', CategoryController::class)->except('show');
+
+            //get user list
+            Route::get('/all-user',[\App\Http\Controllers\Profile\ProfileController::class, 'allUser'])->name('profile.all-user');
+            // reset password user by admin
+            Route::put('/reset-password/{id}',[\App\Http\Controllers\Profile\ProfileController::class, 'resetPasswordByAdmin'])->name('profile.reset-password');
     });
 });
