@@ -15,7 +15,7 @@
         @if (Auth::user()->role == 'admin')
             {{-- ALL USER --}}
             <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ route('profile.all-user') }}">
+                <a class="nav-link collapsed" href="{{ route('allUser') }}">
                     <i class="bi bi-file-earmark-person-fill"></i>
                     <span>User</span>
                 </a>

@@ -15,9 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [\App\Http\Controllers\Frontend\FrontendController::class,'index'] );
 
 Auth::routes();
 
@@ -34,9 +32,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [\App\Http\Controllers\Profile\ProfileController::class,'index'])->name('profile.index');
     Route::get('/change-password',[\App\Http\Controllers\Profile\ProfileController::class, 'changePassword'])->name('profile.change-password');
     Route::put('/update-password',[\App\Http\Controllers\Profile\ProfileController::class, 'updatePassword'])->name('profile.update-password');
-    Route::get('/create-profile',[\App\Http\Controllers\Profile\ProfileController::class, 'createProfile'])->name('profile.create');
-    //post profile
-    Route::post('/store-profile',[\App\Http\Controllers\Profile\ProfileController::class, 'storeProfile'])->name('profile.store');
+    Route::get('/create-profile', [\App\Http\Controllers\Profile\ProfileController::class, 'createProfile'])->name('createProfile');
+    Route::post('/store-profile',[\App\Http\Controllers\Profile\ProfileController::class,'storeProfile'])->name('storeProfile');
+    Route::get('/edit-profile',[\App\Http\Controllers\Profile\ProfileController::class,'editProfile'])->name('editProfile');
+    Route::put('/update-profile',[\App\Http\Controllers\Profile\ProfileController::class,'updateProfile'])->name('updateProfile');
+    
 
     //Route for admin
     // middleware admin diamana kita membuat middleware sendiri
@@ -57,9 +57,11 @@ Route::middleware('auth')->group(function () {
             // karena kita hanya akan menggunakan index
             Route::resource('category', CategoryController::class)->except('show');
 
-            //get user list
-            Route::get('/all-user',[\App\Http\Controllers\Profile\ProfileController::class, 'allUser'])->name('profile.all-user');
-            // reset password user by admin
-            Route::put('/reset-password/{id}',[\App\Http\Controllers\Profile\ProfileController::class, 'resetPasswordByAdmin'])->name('profile.reset-password');
+            //get all user
+            Route::get('/all-user',[\App\Http\Controllers\Profile\ProfileController::class, 'allUser'])->name('allUser');
+            // reset password user
+            Route::put('/reset-password/{id}',[\App\Http\Controllers\Profile\ProfileController::class, 'resetPassword'])->name('resetPassword');
+
+           
     });
 });

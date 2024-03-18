@@ -7,7 +7,7 @@
                 {{ $news->title }} - <span class="badge rounded-pill bg-info text-white">{{ $news->category->name }}</span>
             </h5>
             <img src="{{ $news->image }}" alt="ini gambar berita" class="img-fluid">
-            <div id="editor">
+            <div id="editor" class="mt-2">
                 {!! $news->content !!}
             </div>
 

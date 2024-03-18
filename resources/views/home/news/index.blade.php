@@ -30,6 +30,7 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $row->title }}</td>
+                                    {{-- <td>{{ Str::limit($row->title, 20) }}</td> --}}
                                     <td>{{ $row->category->name }}</td>
                                     <td>
                                         <img src="{{ $row->image }}" width="100" alt="image">
@@ -62,6 +63,9 @@
                             @endforelse
                         </tbody>
                     </table>
+
+                    {{-- {{ Paginatio }}+ --}}
+                    {{ $news->links('pagination::bootstrap-5') }}
                 </div>
             </div>
         </div>

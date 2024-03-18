@@ -1,16 +1,31 @@
 @extends('home.parent')
 
 @section('content')
+    {{-- alert success --}}
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>{{ session('success') }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    {{-- alert error --}}
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>{{ session('error') }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="card p-4">
         <div class="row">
             <div class="col-md-6 d-flex justify-content-center">
-
-                @if (Auth::user()->profile->image == '')
+                @if (empty(Auth::user()->profile->image))
                     <img class="w-75"
                         src="https://ui-avatars.com/api/background=0D8ABC&color=fff&name={{ Auth::user()->name }}"
                         alt="">
                 @else
-                    <img class="w-75" src="{{ Auth::user()->profile->image }}" class="img-thumbnail" alt="">
+                    <img src="{{ Auth::user()->profile->image }}" alt="ini profile image">
                 @endif
             </div>
             <div class="col-md-6 text-center">
@@ -23,13 +38,17 @@
                     {{-- // untuk menampilkan role account user yang sedang login --}}
                     <li class="list-group-item">Role Account = <strong>{{ Auth::user()->role }}</strong></li>
                 </ul>
-                @if (Auth::user()->profile->image == '')
-                    <a href="{{ route('profile.create') }}" class="btn btn-info mt-3">Create Profile</a>
+                @if (empty(Auth::user()->profile->image))
+                    <a href="{{ route('createProfile') }}" class="btn btn-info mt-2">
+                        <i class="bi bi-plus"></i>
+                        Create Profile
+                    </a>
                 @else
-                    <a href="" class="btn btn-warning mt-3">Edit
-                        Profile</a>
+                    <a href="{{ route('editProfile') }}" class="btn btn-warning mt-2">
+                        <i class="bi bi-pencil"></i>
+                        Edit Profile
+                    </a>
                 @endif
-
             </div>
         </div>
     </div>

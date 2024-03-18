@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Profile;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -45,7 +46,7 @@ class ProfileController extends Controller
 
         if ($currentPasswordStatus) {
             if ($request->password == $request->confirmation_password) {
-                
+
                 // get user login by auth
                 $user = auth()->user();
 
@@ -57,11 +58,11 @@ class ProfileController extends Controller
                     'success',
                     'password has been updated'
                 );
-                
             } else {
                 return redirect()->back()->with(
                     'error',
-                    'password does not match');            
+                    'password does not match'
+                );
             }
         } else {
             return redirect()->back()
@@ -72,26 +73,24 @@ class ProfileController extends Controller
         }
     }
 
-    public function allUser(){
-        
+    public function allUser()
+    {
+
         $title = 'All User';
-        //get all user by role user
-        $users = User::where('role','user')->get();
+
+        $user = User::where('role', 'user')->get();
 
         return view('home.user.index', compact(
             'title',
-            'users'
+            'user'
         ));
-        
     }
 
-    public function resetPasswordByAdmin($id)
+    public function resetPassword($id)
     {
-        //get user by id
+        // get user by id
         $user = User::find($id);
-
-        //update password
-        $user->password = Hash::make('1234');
+        $user->password = Hash::make('123456');
         $user->save();
 
         return redirect()->back()->with(
@@ -111,31 +110,86 @@ class ProfileController extends Controller
 
     public function storeProfile(Request $request)
     {
-        //validate
+        // validate
         $this->validate($request, [
             'first_name' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+            'image' => 'image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
-        //get user login
+        // store image
+        $image = $request->file('image');
+        $image->storeAs('public/profile', $image->getClientOriginalName());
+
+        // get user login
         $user = auth()->user();
 
-        //store image
-        $image = $request->file('image');
-        $image->storeAs('public/profile/', $image->getClientOriginalName());
-
-        //create profile
+        // create data profile
         $user->profile()->create([
             'first_name' => $request->first_name,
             'image' => $image->getClientOriginalName()
         ]);
 
-        // dd($user);
+        return redirect()->route('profile.index')
+            ->with(
+                'success',
+                'Profile has been created'
+            );
+    }
 
-        return redirect()->route('profile.index')->with(
-            'success',
-            'Profile has been created'
-        );
+    public function editProfile()
+    {
 
+        $title = 'Edit Profile';
+        // get data user login
+        $user = auth()->user();
+
+        return view('home.profile.edit', compact(
+            'user',
+            'title'
+        ));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        // validate
+        $this->validate($request, [
+            'first_name' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
+        // get user login
+        $user = auth()->user();
+
+        // cek kondisi image bila tidak upload image
+        if ($request->file('image') == '') {
+            $user->profile->update([
+                'first_name' => $request->first_name
+            ]);
+
+            return redirect()->route('profile.index')
+                ->with(
+                    'success',
+                    'Profile has been updated'
+                );
+        } else {
+            //delete image
+            Storage::delete('public/profile/' . basename($user->profile->image));
+
+            //store image
+            $image = $request->file('image');
+            $image->storeAs('public/profile', $image->getClientOriginalName());
+
+            //update data
+            $user->profile->update([
+                'first_name' => $request->first_name,
+                'image' => $image->getClientOriginalName()
+            ]);
+
+            return redirect()->route('profile.index')
+                ->with(
+                    'success',
+                    'Profile has been updated'
+                );
+        }
     }
 }
