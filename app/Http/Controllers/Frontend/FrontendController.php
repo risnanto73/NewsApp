@@ -18,4 +18,14 @@ class FrontendController extends Controller
             'category',
         ));
     }
+
+    public function detailNews($slug){
+        // get data news by slug
+        // fungsi first() digunakan untuk mengambil data pertama yang ditemukan
+        $news = News::where('slug', $slug)->first();
+        
+        return view('frontend.news.detail', compact(
+            'news',
+        ));
+    }
 }
