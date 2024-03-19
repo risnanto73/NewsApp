@@ -11,6 +11,20 @@
                 {!! $news->content !!}
             </div>
 
+            <br>
+
+            <p>
+                {{-- // fungsi diffForHumans() 
+                // adalah untuk menampilkan waktu dalam bentuk "1 hour ago" atau "2 days ago" --}}
+                {{ $news->created_at->diffForHumans() }}
+
+                {{-- // fungsi format('d F Y') --}}
+                {{-- // adalah untuk menampilkan waktu dalam bentuk "12 July 2021" --}}
+                {{ $news->created_at->format('d F Y') }}
+
+               
+            </p>
+
             <script>
                 ClassicEditor
                     .create(document.querySelector('#editor'))
