@@ -32,7 +32,9 @@
     <link href="{{ asset('admin/assets/css/style.css') }}" rel="stylesheet">
 
     {{-- CKedito 5 CDN --}}
-    <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
+    {{-- <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script> --}}
+    <script src="https://cdn.ckeditor.com/ckeditor5/32.0.0/classic/ckeditor.js"></script>
+
 
     <!-- =======================================================
   * Template Name: NiceAdmin

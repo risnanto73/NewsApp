@@ -53,7 +53,9 @@
 
                     <script>
                         ClassicEditor
-                            .create(document.querySelector('#editor'))
+                            .create(document.querySelector('#editor'),{
+                                extraAllowedContent: 'iframe[src]'
+                            })
                             .then(editor => {
                                 console.log(editor);
                             })

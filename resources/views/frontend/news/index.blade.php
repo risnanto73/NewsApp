@@ -68,7 +68,7 @@
                                             class="mx-1">&bullet;</span>
                                         <span>{{ $news->created_at->diffForHumans() }}</span>
                                     </div>
-                                    <h3><a href="#">{{ $news->title }}</a></h3>
+                                    <h3><a href="{{ route('detailNews',$news->slug) }}">{{ $news->title }}</a></h3>
                                     <p>
                                         {{ Str::limit(strip_tags($news->content, 10)) }}
                                         {{-- {!! Str::limit(strip_tags, $news->content, 10) !!} --}}
@@ -171,6 +171,8 @@
                                 <span class="author mb-3 d-block">Admin</span>
                             </div>
                         @endforeach
+
+                        
 
                     </div>
                 </div>
