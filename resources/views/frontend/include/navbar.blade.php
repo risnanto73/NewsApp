@@ -10,7 +10,7 @@
         <nav id="navbar" class="navbar">
             <ul>
                 @foreach ($category as $row)
-                    <li><a href="#">{{ $row->name }}</a></li>
+                    <li><a href="{{ route('detailCategory', $row->slug) }}">{{ $row->name }}</a></li>
                 @endforeach
 
             </ul>

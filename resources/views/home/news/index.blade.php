@@ -21,7 +21,6 @@
                                 <th>Title</th>
                                 <th>Category</th>
                                 <th>Image News</th>
-                                <th>Image Category</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -34,9 +33,6 @@
                                     <td>{{ $row->category->name }}</td>
                                     <td>
                                         <img src="{{ $row->image }}" width="100" alt="image">
-                                    </td>
-                                    <td>
-                                        <img src="{{ $row->category->image }}" width="100" alt="ini image category">
                                     </td>
                                     <td>
                                         <a href="{{ route('news.show', $row->id) }}" class="btn btn-info">
