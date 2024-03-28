@@ -13,6 +13,11 @@
                 <ul class="list-group">
                     {{-- // untuk menampilkan detail account user yang sedang login --}}
                     <li class="list-group-item">Name Account = <strong>{{ Auth::user()->name }}</strong></li>
+                    @if (@empty(Auth::user()->profile->first_name))
+
+                    @else 
+                    <li class="list-group-item">Name Account = <strong>{{ Auth::user()->profile->first_name }}</strong></li>
+                    @endif
                     {{-- // untuk menampilkan email account user yang sedang login --}}
                     <li class="list-group-item">E-Mail Account = <strong>{{ Auth::user()->email }}</strong></li>
                     {{-- // untuk menampilkan role account user yang sedang login --}}
